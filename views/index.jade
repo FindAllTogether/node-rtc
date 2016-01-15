@@ -1,5 +1,17 @@
 extends layout
 
+block js
+	script(src="/scripts/modules/socket.min.js")
+	script(src="/scripts/modules/ui-bootstrap-tpls-1.0.3.min.js")
+	script(src="/scripts/main.js")
+	script(src="/scripts/services/ChatServices.js")
+	script(src="/scripts/controllers/ChatController.js")
+	script(src="/scripts/controllers/PageController.js")
+	script(src="/scripts/directives/ChatDirective.js")
+	//
+		script
+			| function callback(data){data = JSON.parse(data);notifyMe(data.name, data.message);}
+			| $(document).ready(function(){ socketio("http://localhost:3000", '233453', callback);});
 block content
-  h1= title
-  p Welcome to #{title}
+	h1(ng-init="init(#{JSON.stringify(data)})")= title
+	div(ng-view)

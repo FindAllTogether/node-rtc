@@ -8,7 +8,7 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 	$routeProvider
 	// fetch chat
 	.when("/", {
-		template: "<chat>", 
+		template: "", 
 		controller: "ChatController"})
 	.otherwise("/404", {template: "error", controller: "ErrorController"});
 

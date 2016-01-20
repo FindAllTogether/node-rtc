@@ -70,6 +70,44 @@ var listener = function(socket){
 			return true;
 		},
 
+		// On receiving a new message
+		chat_receive: function(data){
+			if(!data.message || !data.user){
+				return false;
+			}
+
+			var res_data = {
+				'message': data.message,
+				'type':'chat_message'
+			}
+
+			if(!data.room || data.room =='undefined'){
+				var id = data.user;			
+				// if user is active
+				if(Object.keys(users).indexOf(id) > -1){
+					// for each device of the user
+					users[id].forEach(function(user_socket){
+						// emit data for the user
+						user_socket.emit('chat', res_data);
+					});
+				} else{
+					// if user is not active then save entry in database
+					var pending = {
+						user: id,
+						data: res_data
+					};
+					queue.insert(pending,function(err, result){
+						console.log('notification inserted');
+					});
+				}
+			}
+
+			if(data.room){
+				socket.broadcast.to(room).emit('chat',res_data);
+			}
+			return true;
+		},
+
 		// uses socket of disconnected user
 		disconnect: function() {
 			var index = users[socket.user].indexOf(socket);

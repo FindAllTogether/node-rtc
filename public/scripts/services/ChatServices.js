@@ -1,9 +1,9 @@
 app.
 factory('socket', function (socketFactory) {
 	var socketObj = function(url,username, callback){
-		var socket = io.connect('http://localhost:3000');
+		var socket_connection = io.connect(url);
 		socket = socketFactory({
-			ioSocket: socket
+			ioSocket: socket_connection
 		});
 
 		socket.on('connection', function (msg) {
@@ -11,7 +11,7 @@ factory('socket', function (socketFactory) {
 		});
 
 		socket.on('listner',function(session){
-			socket.on(session['sessionID'], function(data){
+			socket.on(session['sessionID'], function(ev, data){
 				callback(data.data);
 			});
 		});
@@ -23,7 +23,9 @@ factory('socket', function (socketFactory) {
 
 app.
 factory('desktopNotification', function(){
-	var notifyMe = function(user,message) {
+	var notifyMe = function(data) {
+		var user= data.user ,
+			message = data.message;
 		// Let's check if the browser supports notifications
 		if (!("Notification" in window)) {
 			alert("This browser does not support desktop notification");

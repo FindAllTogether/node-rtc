@@ -1,5 +1,7 @@
-app.controller('PageController',function(socket, $scope){
+app.controller('PageController',function(socket, desktopNotification, $scope){
 	$scope.init = function(data){
-		socket(data.link, data.user, function(data){});
+		$scope.user = data.user;
+		$scope.chat_username = '233453';
+		socket = socket(data.link, data.user, desktopNotification);
 	}	
 });

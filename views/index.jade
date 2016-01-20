@@ -8,10 +8,17 @@ block js
 	script(src="/scripts/controllers/ChatController.js")
 	script(src="/scripts/controllers/PageController.js")
 	script(src="/scripts/directives/ChatDirective.js")
+	script(src='https://code.jquery.com/jquery-2.1.4.min.js')
 	//
 		script
 			| function callback(data){data = JSON.parse(data);notifyMe(data.name, data.message);}
 			| $(document).ready(function(){ socketio("http://localhost:3000", '233453', callback);});
 block content
 	h1(ng-init="init(#{JSON.stringify(data)})")= title
+	chat(chat_username="{{chat_username}}",
+		width="250",
+		inputHeight="20",
+		viewHeight="260",
+		headerHeight="20",
+		height="300")
 	div(ng-view)

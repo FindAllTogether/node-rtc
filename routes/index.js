@@ -21,6 +21,8 @@ app.io.sockets.on('connection', function (socket) {
     socket.on('auth', on.auth);
     // when connection disconnect
     socket.on('disconnect',on.disconnect);
+    // on message sent
+    socket.on('chat',on.chat_receive);
 });
 
 Object.keys(errors).forEach(function(key){

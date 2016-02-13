@@ -1,10 +1,35 @@
 body {
-  padding: 50px;
+  /*padding: 50px;*/
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+.fat-red{
+	color: #ff0000;
+}
+
+.fat-black{
+	color: #000000;
+}
+
+
+/**
+ * For facebook like chat body and chat boxes
+ */
+.fat-ct-usr-wrap{
+	position: fixed;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    right: 0;
+}
+
+.fat-chat-usrs-header{
+	color: #fff;
+
 }
 
 .fat-chat-wrapper{
@@ -16,16 +41,19 @@ a {
 	overflow: hidden;
 }
 
-.fat-chat-header{
+.fat-chat-header, .fat-chat-usrs-header{
 	width:100%;
 	height: 25px;
 	background-color: #4e69a2;
 	border: 1px solid #2f477a;
 	clear: both;
+	color: #fff;
+	padding: 2px 0 0 20px;	
 }
 
 .fat-chat-header h4{
 	float: left;
+	margin: 0;	
 }
 
 .fat-chat-close{
@@ -34,7 +62,7 @@ a {
 	color: #fff;
 }
 
-.fat-chat-viewer{
+.fat-chat-viewer, .fat-chat-userlist{
 	clear: both;
 	height: 251px;
 	overflow-y: auto;
@@ -89,15 +117,77 @@ a {
     border-color: transparent transparent transparent #e0edff;
 }
 
-.fat-chat-taker{
+.fat-chat-taker, .fat-usr-srch-wrap{
 	height: 24px;
 	overflow: hidden;
 }
 
-.fat-chat-input{
+.fat-chat-input, .fat-user-search{
 	height: 100% !important;
 	border: 1px solid #bbb;
 	border-bottom: 0;
 	border-radius: 0;
 	padding:2px 3px !important;
 }
+
+/**
+ * For omegle like anonymous chat
+ */
+
+.fat-omegle{
+	width: 100%;
+	height: 100%;
+	background: #fff;
+	margin: 0;
+}
+
+.fat-omegle .fat-msg-body{
+	word-wrap: break-word;
+	margin:10px 0;
+	clear:both;
+	padding: 3px 5px;
+	line-height: 1.5;
+	position: relative;
+	overflow-x: hidden;
+	overflow-y:auto; 
+	border-radius: 5px 5px 0 0;
+	border: solid 1px #dedede;
+}
+
+.fat-omegle .fat-bottom{
+	position: relative;
+	bottom: 0;
+	height: 77px;
+	clear: both;
+	border-radius: 5px;
+}
+
+.fat-omegle .fat-bottom .fat-toggle-btn{
+	width: 15%;
+	float: left;
+	height: 100%;
+	max-width: 90px;
+	min-width: 30px;
+}
+
+.fat-omegle .fat-bottom .fat-mgs-input{
+	width:calc(100% - 90px);
+	float: left;
+	border-radius: 0;
+	resize: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

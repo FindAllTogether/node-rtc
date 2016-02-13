@@ -12,4 +12,8 @@ html(ng-app='rtc')
 		block js
 	body(ng-controller="PageController")
 		base(href="/")
-		block content
+		.container
+			.row
+				.col-md-12
+					h1(ng-init="init(#{JSON.stringify(data)})")= title
+			block content

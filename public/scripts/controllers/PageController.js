@@ -1,7 +1,17 @@
-app.controller('PageController',function(socket, desktopNotification, $scope){
+app.controller('PageController',function(socket, desktopNotification, $scope, $rootScope){
 	$scope.init = function(data){
-		$scope.user = data.user;
-		$scope.chat_username = '233453';
-		socket = socket(data.link, data.user, desktopNotification);
-	}	
+		if(data.auth){
+			$scope.user = data.user;
+			$rootScope.username = data.user;
+			$rootScope.socket = socket(data.link, desktopNotification);
+		}else{
+			$rootScope.socketInit = function(){
+				if($rootScope.socket){
+					$rootScope.socket.disconnect();
+				}
+				return socket(data.link, null, false);
+			}			
+		}
+		
+	}
 });

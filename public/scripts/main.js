@@ -10,6 +10,9 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 	.when("/", {
 		template: "", 
 		controller: "ChatController"})
+	.when("/omegle", {
+		template: "", 
+		controller: "OmegleController"})
 	.otherwise("/404", {template: "error", controller: "ErrorController"});
 
 	if(window.history && window.history.pushState){

@@ -1,19 +1,12 @@
+'use strict';
+var socket_flag = true;
 app.
 factory('socket', function (socketFactory) {
-	var socketObj = function(url,username, callback){
-		var socket_connection = io.connect(url);
-		socket = socketFactory({
+	var socketObj = function(url, callback, auth){
+		// open a connection
+		var socket_connection = io.connect(url, { 'query': "auth="+auth, 'force new connection': true });
+		var socket = socketFactory({
 			ioSocket: socket_connection
-		});
-
-		socket.on('connection', function (msg) {
-		 	socket.emit('auth',{user:username})
-		});
-
-		socket.on('listner',function(session){
-			socket.on(session['sessionID'], function(ev, data){
-				callback(data.data);
-			});
 		});
 
 		return socket;

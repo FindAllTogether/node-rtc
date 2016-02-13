@@ -9,25 +9,13 @@ block js
 	script(src="/scripts/controllers/PageController.js")
 	script(src="/scripts/directives/ChatDirective.js")
 	script(src='https://code.jquery.com/jquery-2.1.4.min.js')
-	//
-		script
-			| function callback(data){data = JSON.parse(data);notifyMe(data.name, data.message);}
-			| $(document).ready(function(){ socketio("http://localhost:3000", '233453', callback);});
+
 block content
 	.row
 		.col-md-12
-			chat(chatusername="233453",
-				width="250",
-				height="300",
-				inputheight="24",
-				headerheight="25",
-				viewheight="251")
-			chatusers(
-				width="240",
-				height="500",
-				header="true",
-				headerheight="25",
-				listheight="451"
-				search="true",
-				searchheight="24")
+			omegle(
+				height="100%",
+				width="100%",
+				viewheight="450px",
+				bottomheight="74px")
 			div(ng-view)

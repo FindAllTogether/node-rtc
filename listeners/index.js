@@ -1,16 +1,27 @@
+'use strict';
 var debug = require('debug')('routing:index');
 var queue = require('../models/pending_queue');
 var users = {};
-// user['username']
+var anonymous_users = [];
 
 var listener = function(socket){
 	var on = {
+		// send active user list
+		active: function(data){
+			socket.emit('active-user-list', Object.keys(users));
+		},
+
 		// take data to send
 		auth : 	function(data){
+			// check user
 			if(!data.user){
 				socket.disconnect();
+				return;
 			}
-			//data.user = some_function(data.user);
+
+			// Later authentication code will be inserted here
+
+			// store data in socket
 			socket.user = data.user;
 			if(Object.keys(users).indexOf(data.user)>-1){
 				if(users[data.user].indexOf(socket)>-1){
@@ -19,7 +30,7 @@ var listener = function(socket){
 				  	users[data.user].push(socket);
 				}
 			} else{
-				users[data.user] = [socket];
+				users[data.user] = [socket];								
 			}
 
 			// An event for sending notification
@@ -39,7 +50,8 @@ var listener = function(socket){
 			});
 		},
 
-		// req from user
+		// not in use
+		// will be used for sending push notifications
 		notification: function(req){
 			var body = req.body;
 			if(!body.data || !body.users){
@@ -102,17 +114,72 @@ var listener = function(socket){
 				}
 			}
 
+			// for group chat
 			if(data.room){
 				socket.broadcast.to(room).emit('chat',res_data);
 			}
 			return true;
 		},
 
+		// on anonymous chat request
+		anonymous_connect: function(data){
+			var first = true;
+			var user = null;
+			if(anonymous_users.length>0){
+				try{
+					user = anonymous_users.pop();
+					// for mutual exclusion
+					if(user){
+						first = false;
+						user.chatWith = socket;
+						socket.chatWith = user;
+						user.emit('connected');
+						socket.emit('connected');
+					}
+				}catch(e){}				
+			}
+
+			if(first){
+				anonymous_users.push(socket);
+			}
+		},
+
+		// on anonymous message
+		anonymous_message: function(data){
+			// return if no message
+			if(!data.message) return;
+			// if pair is available
+			try{
+				socket.chatWith.emit('message',data);
+			}catch(e){
+				socket.disconnect();
+			}			
+		},
+
 		// uses socket of disconnected user
 		disconnect: function() {
-			var index = users[socket.user].indexOf(socket);
-			if (index > -1) {
-			    users[socket.user].splice(index, 1);
+			var index;
+			if(socket.auth){
+				index = users[socket.user].indexOf(socket);
+				if (index > -1) {
+				    users[socket.user].splice(index, 1);			    
+				}
+				return;
+			}
+
+			// disconnect pair
+			try{
+				// remove socket from anonymous_users
+				index = anonymous_users.indexOf(socket);
+				if (index > -1) {
+				    anonymous_users.splice(index, 1);			    
+				}
+
+				// disconnect pair
+				socket.chatWith.disconnect();				
+			}catch(e){
+				// pair already disconnected 
+				// or there was no pair, In case, of single user
 			}
 	    }
 	}

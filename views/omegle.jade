@@ -1,21 +1,7 @@
-extends layout
-
-block js
-	script(src="/scripts/modules/socket.min.js")
-	script(src="/scripts/modules/ui-bootstrap-tpls-1.0.3.min.js")
-	script(src="/scripts/main.js")
-	script(src="/scripts/services/ChatServices.js")
-	script(src="/scripts/controllers/ChatController.js")
-	script(src="/scripts/controllers/PageController.js")
-	script(src="/scripts/directives/ChatDirective.js")
-	script(src='https://code.jquery.com/jquery-2.1.4.min.js')
-
-block content
-	.row
-		.col-md-12
-			omegle(
-				height="100%",
-				width="100%",
-				viewheight="450px",
-				bottomheight="74px")
-			div(ng-view)
+.row(ng-init="init(#{JSON.stringify(data)})")
+	.col-md-12
+		omegle(
+			height="100%",
+			width="100%",
+			viewheight="400px",
+			bottomheight="74px")

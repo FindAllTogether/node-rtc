@@ -1,36 +1,48 @@
+'use strict';
 var debug = require('debug')('routing:index');
 var app = require('../app');
 var listener = require('../listeners/index');
 var errors = require('../middlewares/errors');
+var route = require('../middlewares/route');
 
 app.get('/', function(req, res) {
     var data = {
-        link: "http://localhost:3000",
-        user: '233453',
-        auth: true
+        link: "http://localhost:3000", // websocket server link
+        user: '233453', // id of current user
+        auth: true // authentication required
     };
-    res.render('index', { title: 'Find All Together', data: data });
+    
+    if(!req.xhr){
+        res.render('base', { title: 'Find All Together', data: data });
+    }else{
+        res.render('index', { title: 'Find All Together', data: data });
+    }  
 });
 
 app.get('/omegle', function(req, res) {
     var data = {
         link: "http://localhost:3000",
-        auth: false
+        auth: false // authentication not required
     };
-    res.render('omegle', { title: 'Find All Together', data: data });
+    if(!req.xhr){
+        res.render('base', { title: 'Find All Together', data: data });
+    }else{
+        res.render('omegle', { title: 'Find All Together', data: data });
+    }  
 });
-
-// app.io.use(function(socket, next) {
-//     socket.auth = socket.query['auth'];
-//     next();
-// });
 
 // when a new user is connected
 app.io.sockets.on('connection', function (socket) {
     // socket listener object for current session
     var on = listener(socket);
+
+    // check the type of the request
     var handshaken = socket.store['store']['manager']['handshaken'];
-    var auth = handshaken[Object.keys(handshaken)[0]].query.auth;
+    // multiple requests from same browser give multiple handshaken
+    // the last handshaken of the dictionary is the handshaken of 
+    // the current request.
+    var keys = Object.keys(handshaken);
+    var auth = handshaken[keys[keys.length-1]].query.auth;
     // if user requests for authentication
     if(auth != 'false'){
         // send acknowledgement to client

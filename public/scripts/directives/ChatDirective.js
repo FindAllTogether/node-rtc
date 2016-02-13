@@ -2,7 +2,7 @@
 (function(){
  	angular.module("rtc").directive('chatusers',["$rootScope", "$http",function($rootScope, socket, $http){
  		return {
-			template: "<div style='width: {{width}}px; height: {{ height }}px' class='fat-ct-usr-wrap'><div style='height:{{headerheight}}px' class='fat-chat-usrs-header'>Chat</div><div style='height:{{listheight}}px' class='fat-chat-userlist' data-ng-repeat='user in chat_userlist'>{{user}}</div><div class='fat-usr-srch-wrap' style='height:{{searchheight}}px'><form ng-submit='search_user($event)'><input id='user_search' class='fat-user-search form-control'></form></div></div>",
+			template: "<div style='width: {{width}}px; height: {{ height }}px' class='fat-ct-usr-wrap'><div style='height:{{headerheight}}px' class='fat-chat-usrs-header'>Chat</div><div style='height:{{listheight}}px' class='fat-chat-userlist' data-ng-repeat='user in chat_userlist'><div>{{user}}</div></div><div class='fat-usr-srch-wrap' style='height:{{searchheight}}px'><form ng-submit='search_user($event)'><input id='user_search' class='fat-user-search form-control'></form></div></div>",
 			restrict: "E",
 			priority: 99,
 			scope: {

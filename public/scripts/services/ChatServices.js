@@ -1,5 +1,4 @@
 'use strict';
-var socket_flag = true;
 app.
 factory('socket', function (socketFactory) {
 	var socketObj = function(url, callback, auth){

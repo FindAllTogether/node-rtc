@@ -1,33 +1,16 @@
-extends layout
-
-block js
-	script(src="/scripts/modules/socket.min.js")
-	script(src="/scripts/modules/ui-bootstrap-tpls-1.0.3.min.js")
-	script(src="/scripts/main.js")
-	script(src="/scripts/services/ChatServices.js")
-	script(src="/scripts/controllers/ChatController.js")
-	script(src="/scripts/controllers/PageController.js")
-	script(src="/scripts/directives/ChatDirective.js")
-	script(src='https://code.jquery.com/jquery-2.1.4.min.js')
-	//
-		script
-			| function callback(data){data = JSON.parse(data);notifyMe(data.name, data.message);}
-			| $(document).ready(function(){ socketio("http://localhost:3000", '233453', callback);});
-block content
-	.row
-		.col-md-12
-			chat(chatusername="233453",
-				width="250",
-				height="300",
-				inputheight="24",
-				headerheight="25",
-				viewheight="251")
-			chatusers(
-				width="240",
-				height="500",
-				header="true",
-				headerheight="25",
-				listheight="451"
-				search="true",
-				searchheight="24")
-			div(ng-view)
+.row(ng-init="init(#{JSON.stringify(data)})")
+	.col-md-12
+		chat(chatusername="233453",
+			width="250",
+			height="300",
+			inputheight="24",
+			headerheight="25",
+			viewheight="251")
+		chatusers(
+			width="240",
+			height="500",
+			header="true",
+			headerheight="25",
+			listheight="451"
+			search="true",
+			searchheight="24")

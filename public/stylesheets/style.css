@@ -19,6 +19,10 @@ a {
 /**
  * For facebook like chat body and chat boxes
  */
+ .chat{
+ 	width:250px;
+ }
+
 .fat-ct-usr-wrap{
 	position: fixed;
     width: 100%;
@@ -60,6 +64,7 @@ a {
 	padding:3px 5px;
 	display: inline-block;
 	color: #fff;
+	cursor: pointer;
 }
 
 .fat-chat-viewer, .fat-chat-userlist{
@@ -71,6 +76,16 @@ a {
 	border:2px solid #bbb;
 	border-width: 0 1px;
 	background-color: #edeef1;
+}
+
+.fat-chat-userlist ul{
+	list-style: none;
+	padding: 0;
+}
+
+.fat-chat-userlist>ul>li{
+	padding:2px 3px;
+	cursor: pointer;
 }
 
 .fat-chat-message{

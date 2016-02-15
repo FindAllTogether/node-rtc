@@ -1,7 +1,7 @@
 doctype html
 html(ng-app='rtc')
 	head
-		title= title
+		title Find All Together
 		script(src="socket.io/socket.io.js")
 		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
 		link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css')
@@ -32,7 +32,7 @@ html(ng-app='rtc')
 								span.caret
 							ul.dropdown-menu
 								li
-									a(href='#') Action
+									a(href='/logout') Logout
 								li
 									a(href='#') Another action
 								li
@@ -67,7 +67,7 @@ html(ng-app='rtc')
 		.container
 			.row
 				.col-md-12
-					h1= title
+					h1 Find All Together
 			div(ng-view)
 		script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js')
 		script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js')

@@ -2,14 +2,12 @@
 app.controller('ChatController', function (socket, desktopNotification, $scope, $rootScope) {
 	$scope.chat_username = '233453';
 	$scope.init = function(data){
-		$scope.user = data.user;
 		$rootScope.username = data.user;
 		$rootScope.socket = socket(data.link, desktopNotification, true);
 
 		// send authentication	
 		$rootScope.socket.on('connection', function (msg) {
 			$rootScope.socket.emit('auth',{user:$rootScope.username});
-			console.log('alerted '+$rootScope.username);
 		});
 
 		// For desktop notifications
@@ -19,6 +17,10 @@ app.controller('ChatController', function (socket, desktopNotification, $scope, 
 			});
 		});
 	};
+
+	$scope.$on('$destroy', function(event) {
+	    $rootScope.socket.disconnect();
+	});
 });
 
 app.controller('OmegleController', function (socket, $scope, $rootScope) {
@@ -30,4 +32,8 @@ app.controller('OmegleController', function (socket, $scope, $rootScope) {
 			return socket(data.link, null, false);
 		}
 	};
+});
+
+app.controller('LogoutController', function (socket, $scope) {
+	window.location.href = '/';
 });

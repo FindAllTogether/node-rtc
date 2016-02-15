@@ -4,11 +4,11 @@ var queue = require('../models/pending_queue');
 var users = {};
 var anonymous_users = [];
 
-var listener = function(socket){
+var listener = function(socket, io){
 	var on = {
 		// send active user list
 		active: function(data){
-			socket.emit('active-user-list', Object.keys(users));
+			io.sockets.emit('active-user-list', {'users': Object.keys(users)});
 		},
 
 		// take data to send
@@ -22,6 +22,7 @@ var listener = function(socket){
 			// Later authentication code will be inserted here
 
 			// store data in socket
+			socket.auth = true;
 			socket.user = data.user;
 			if(Object.keys(users).indexOf(data.user)>-1){
 				if(users[data.user].indexOf(socket)>-1){
@@ -35,12 +36,15 @@ var listener = function(socket){
 
 			// An event for sending notification
 			socket.emit('listner',{'sessionID':socket.id});
+			// send active user list
+			io.sockets.emit('active-user-list', {'users': Object.keys(users)});
 
 			// send pending notifications
 			queue.select({user:data.user},function(err, pending_notices){
 				if(!err && pending_notices && pending_notices.length){
 					pending_notices.forEach(function(notice){
-						socket.emit(socket.id, { 'data': notice.data });
+						var notice_data = JSON.parse(notice.data);
+						socket.emit(notice_data.type, { 'data': notice_data });
 						// delete notification from database
 						queue.remove(notice.id, function(e, r){
 							console.log('notification removed');
@@ -90,7 +94,8 @@ var listener = function(socket){
 
 			var res_data = {
 				'message': data.message,
-				'type':'chat_message'
+				'type':'chat_message',
+				'from': socket.user
 			}
 
 			if(!data.room || data.room =='undefined'){
@@ -100,13 +105,13 @@ var listener = function(socket){
 					// for each device of the user
 					users[id].forEach(function(user_socket){
 						// emit data for the user
-						user_socket.emit('chat', res_data);
+						user_socket.emit('chat_message', res_data);
 					});
 				} else{
 					// if user is not active then save entry in database
 					var pending = {
 						user: id,
-						data: res_data
+						data: JSON.stringify(res_data)
 					};
 					queue.insert(pending,function(err, result){
 						console.log('notification inserted');
@@ -162,8 +167,12 @@ var listener = function(socket){
 			if(socket.auth){
 				index = users[socket.user].indexOf(socket);
 				if (index > -1) {
-				    users[socket.user].splice(index, 1);			    
+				    users[socket.user].splice(index, 1);
+				    if(users[socket.user].length==0){
+				    	delete users[socket.user];
+				    }			    
 				}
+				io.sockets.emit('active-user-list', {'users': Object.keys(users)});
 				return;
 			}
 

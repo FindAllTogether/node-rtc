@@ -15,6 +15,9 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider', function ($r
 	.when("/", {
 		templateUrl: "/", 
 		controller: "ChatController"})
+	.when("/logout", {
+		templateUrl: "/logout", 
+		controller: "LogoutController"})
 	.when("/omegle", {
 		templateUrl: "/omegle", 
 		controller: "OmegleController"})

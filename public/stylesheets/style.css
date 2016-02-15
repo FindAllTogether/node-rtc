@@ -169,6 +169,10 @@ a {
 	border: solid 1px #dedede;
 }
 
+.fat-omegle .fat-msg-body .fat-chat-message{
+	max-width: initial !important;
+}
+
 .fat-omegle .fat-bottom{
 	position: relative;
 	bottom: 0;

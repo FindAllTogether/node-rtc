@@ -14,6 +14,41 @@ factory('socket', function (socketFactory) {
 });
 
 app.
+factory('openChatbox', function ($rootScope, $compile) {
+	var chatbox = function(scope, username){
+		var state, hiddenElement, right, div;  
+		hiddenElement = jQuery('chat[chatusername="'+username+'"');
+		
+		// if already active tab
+		if(hiddenElement.length != 0)
+			if($(hiddenElement[0]).css("display") != 'none'){
+			return;
+		}
+		if($rootScope.chatState == '7'){
+			jQuery('chat[state="4"]').hide();
+		}
+		// position of chat box
+		state = $rootScope.stateTransition[$rootScope.chatState][1];    			
+		$rootScope.chatState = $rootScope.stateTransition[$rootScope.chatState][0];
+		console.log('chatState '+$rootScope.chatState + ' state '+ state);					
+		
+		right = (state==1)?'250px':(state==2)?'510px':'770px';
+		if(hiddenElement.length == 0){
+			div = '<chat state='+state+' chatusername="'+username+'" width="250" height="300" inputheight="24" headerheight="25" viewheight="251" right='+right+'></chat>';
+			jQuery("#fat-chat-container").append(
+			  $compile(div)(scope)
+			);	
+		}else{
+			hiddenElement.show();
+			hiddenElement.attr('right',right);
+			hiddenElement.attr('state',state);
+			hiddenElement.find('.fat-chat-wrapper').css('right',right);
+		}
+	}
+	return chatbox;
+});
+
+app.
 factory('desktopNotification', function(){
 	var notifyMe = function(data) {
 		var user= data.user ,

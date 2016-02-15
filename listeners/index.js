@@ -104,8 +104,13 @@ var listener = function(socket, io){
 				if(Object.keys(users).indexOf(id) > -1){
 					// for each device of the user
 					users[id].forEach(function(user_socket){
-						// emit data for the user
-						user_socket.emit('chat_message', res_data);
+						// send accknowledgement to user
+						user_socket.emit('chat_message_ready',{'from': socket.user});
+
+						setTimeout(function(){
+						    // emit data for the user
+							user_socket.emit('chat_message', res_data);
+						}, 10);						
 					});
 				} else{
 					// if user is not active then save entry in database

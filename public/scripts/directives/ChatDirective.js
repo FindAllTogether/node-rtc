@@ -1,6 +1,6 @@
 'use strict';
 (function(){
- 	angular.module("rtc").directive('chatusers',["$rootScope","socket", "$http", "$compile",function($rootScope, socket, $http, $compile){
+ 	angular.module("rtc").directive('chatusers',["$rootScope","socket", "openChatbox", "$http", "$compile",function($rootScope, socket, openChatbox, $http, $compile){
  		return {
 			template: "<div style='width: {{width}}px; height: {{ height }}px' class='fat-ct-usr-wrap'><div style='height:{{headerheight}}px' class='fat-chat-usrs-header'>Chat</div><div style='height:{{listheight}}px' class='fat-chat-userlist'><ul data-ng-repeat='user in chat_userlist'><li ng-if='myusername!=user' data-id='{{user}}'>{{user}}</li></ul></div><div class='fat-usr-srch-wrap' style='height:{{searchheight}}px'><form ng-submit='search_user($event)'><input id='user_search' class='fat-user-search form-control'></form></div></div>",
 			restrict: "E",
@@ -34,9 +34,14 @@
 	    		$rootScope.chatState = 0;
 
 	    		socket.emit('active-user-list');
-    			socket.removeAllListeners("active-user-list");
+    			// socket.removeAllListeners("active-user-list");
     			socket.on('active-user-list',function(data){
     				fill_chat_userlist(data);
+    			});
+
+    			// open chatbox on receiving message
+    			socket.on('chat_message_ready',function(data){
+    				openChatbox(scope,data.from);
     			});
 
 	    		var fill_chat_userlist = function(data){
@@ -63,34 +68,7 @@
 	    			if(!event.target.dataset.id){
 	    				return;
 	    			}
-	    			hiddenElement = jQuery('chat[chatusername="'+event.target.dataset.id+'"');
-	    			
-	    			// if already active tab
-	    			if(hiddenElement.length != 0)
-	    				if($(hiddenElement[0]).css("display") != 'none'){
-						return;
-					}
-					if($rootScope.chatState == '7'){
-						jQuery('chat[state="4"]').hide();
-					}
-					// position of chat box
-					state = $rootScope.stateTransition[$rootScope.chatState][1];    			
-					$rootScope.chatState = $rootScope.stateTransition[$rootScope.chatState][0];
-					console.log('chatState '+$rootScope.chatState + ' state '+ state);					
-					
-					right = (state==1)?'250px':(state==2)?'510px':'770px';
-		    		if(hiddenElement.length == 0){
-						div = '<chat state='+state+' chatusername="'+event.target.dataset.id+'" width="250" height="300" inputheight="24" headerheight="25" viewheight="251" right='+right+'></chat>';
-		    			jQuery("body").append(
-						  $compile(div)(scope)
-						);	
-					}else{
-						hiddenElement.show();
-						hiddenElement.attr('right',right);
-						hiddenElement.attr('state',state);
-						hiddenElement.find('.fat-chat-wrapper').css('right',right);
-					}
-									
+	    			openChatbox(scope, event.target.dataset.id);			
 	    		});
 	    	}
  		}
@@ -120,7 +98,7 @@
 	    		socket.on('chat_message',function(data){
     				if(data.from == scope.chatusername){
     					add_message(data.message, true);
-    				}		    				
+    				}
     			});
 
 	    		function add_message(val, className){
